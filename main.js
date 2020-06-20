@@ -25,8 +25,8 @@ class Mygekko extends utils.Adapter {
             name: 'mygekko',
         });
         this.on('ready', this.onReady.bind(this));
-        //        this.on('objectChange', this.onObjectChange.bind(this));
-        //      this.on('stateChange', this.onStateChange.bind(this));
+        this.on('objectChange', this.onObjectChange.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
@@ -41,12 +41,12 @@ class Mygekko extends utils.Adapter {
         // this.config:
         //this.log.info('myGekko IP Adresse lautet ' + this.config.mygekkoIP);
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const ip = '172.16.1.159';
-        const m_user = 'admin';
-        const m_pass = 'admin';
+        const ip = this.config.mygekkoIP;
+        const m_user = this.config.mygekkoUser;
+        const m_pass = this.config.mygekkoPW;
         //const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
         
-        const werte = async (device, name, type, role, value) => {
+        const werte = async (device, name, type, role, writable, value) => {
 
             await this.setObjectNotExistsAsync(device, {
                 type: 'state',
@@ -55,7 +55,7 @@ class Mygekko extends utils.Adapter {
                     type: type,
                     role: role,
                     read: true,
-                    write: true,
+                    write: writable,
                 },
                 native: {},
             });
@@ -96,11 +96,11 @@ class Mygekko extends utils.Adapter {
                         common: { name: blindName},
                         native: {}
                     });
-                    werte(objName + '.state',  'State',    'boolean',  'switch',        state)
-                    werte(objName + '.position',  'Position',    'number',  'level.blind',        position)
-                    werte(objName + '.angle',  'Angle',    'number',  'level.tilt',        angle)
-                    werte(objName + '.sumstate',  'sum state',    'boolean',  'indicator',        Sum)
-                    werte(objName + '.slatrotation',  'Slate Rotation',    'number',  'indicator',        SlatRotation)
+                    werte(objName + '.state',  'State',    'boolean',  'switch',        false,state)
+                    werte(objName + '.position',  'Position',    'number',  'level.blind',true,        position)
+                    werte(objName + '.angle',  'Angle',    'number',  'level.tilt',true,        angle)
+                    werte(objName + '.sumstate',  'sum state',    'boolean',  'indicator',false,        Sum)
+                    werte(objName + '.slatrotation',  'Slate Rotation',    'number',  'indicator',false,        SlatRotation)
                     
                     /*
                     console.log("interner name " + key);
@@ -156,10 +156,10 @@ class Mygekko extends utils.Adapter {
                         native: {}
                     });
                    
-                    werte(objName + '.sumstate',  'sum state',    'boolean',  'indicator',        true)
-                    werte(objName + '.state',     'state',        'boolean',  'switch',           state)
-                    werte(objName + '.dimmv',     'Dimmer Value', 'number',   'level.dimmer',     DimmValue)
-                    werte(objName + '.rgb',       'RGB Values',   'number',   'level.color.rgb',  RGBColor)
+                    werte(objName + '.sumstate',  'sum state',    'boolean',  'indicator',        false,    true)
+                    werte(objName + '.state',     'state',        'boolean',  'switch',           true,     state)
+                    werte(objName + '.dimmv',     'Dimmer Value', 'number',   'level.dimmer',     true,     DimmValue)
+                    werte(objName + '.rgb',       'RGB Values',   'number',   'level.color.rgb',  true,     RGBColor)
                     /*
                     this.log.info('interner name ' + key);
                     this.log.info('Name ' + LampName);
@@ -214,17 +214,17 @@ class Mygekko extends utils.Adapter {
                         common: { name: roomName},
                         native: {}
                     });
-                    werte(objName + '.actTemp',     'Actual Temp',      'number',  'value.temperature',        actTemp)
-                    werte(objName + '.setPointTemp','SetPoint Temp',    'number',  'value.temperature',        setPointTemp)
-                    werte(objName + '.valve',       'Valve',            'number',  'value.valve ',        valve)
-                    werte(objName + '.mode',        'Mode',             'number',  'value',        mode)
-                    werte(objName + '.reserved',    'Reserved',         'number',  'value',        reserved)
-                    werte(objName + '.tempAdjust',  'Temp Adjust',      'number',  'value.temperature',        tempAdjust)
-                    werte(objName + '.cooling',     'Cooling',          'number',  'value',        cooling)
-                    werte(objName + '.sum',         'SumState',         'number',  'value',        sum)
-                    werte(objName + '.humidity',    'Humidity',         'number',  'value.humidity',        humidity)
-                    werte(objName + '.airQuality',  'AirQuality',       'number',  'value',        airQuality)
-                    werte(objName + '.floorTemp',   'FloorTemp',        'number',  'value.temperature',        floorTemp)
+                    werte(objName + '.actTemp',     'Actual Temp',      'number',  'value.temperature',        false,   actTemp)
+                    werte(objName + '.setPointTemp','SetPoint Temp',    'number',  'value.temperature',        false,   setPointTemp)
+                    werte(objName + '.valve',       'Valve',            'number',  'value.valve ',             false,   valve)
+                    werte(objName + '.mode',        'Mode',             'number',  'value',                    false,   mode)
+                    werte(objName + '.reserved',    'Reserved',         'number',  'value',                    false,   reserved)
+                    werte(objName + '.tempAdjust',  'Temp Adjust',      'number',  'value.temperature',        true,    tempAdjust)
+                    werte(objName + '.cooling',     'Cooling',          'number',  'value',                    false,   cooling)
+                    werte(objName + '.sum',         'SumState',         'number',  'value',                    false,   sum)
+                    werte(objName + '.humidity',    'Humidity',         'number',  'value.humidity',           false,   humidity)
+                    werte(objName + '.airQuality',  'AirQuality',       'number',  'value',                    false,   airQuality)
+                    werte(objName + '.floorTemp',   'FloorTemp',        'number',  'value.temperature',        false,   floorTemp)
                     /*
                     console.log("interner name " + key);
                     console.log("Name " + roomName)
@@ -291,22 +291,22 @@ class Mygekko extends utils.Adapter {
                         common: { name: ventName},
                         native: {}
                     });
-                    werte(objName + '.level',           'Level',            'number',  'value',        level)
-                    werte(objName + '.type',            'Type',             'number',  'value',        type)
-                    werte(objName + '.mode',            'Mode',             'number',  'value',        mode)
-                    werte(objName + '.bypassstate',     'Bypass State',     'number',  'value',        bypassstate)
-                    werte(objName + '.maxLevel',        'Max Level',        'number',  'value.max',        maxLevel)
-                    werte(objName + '.humidity',        'Humidity',         'number',  'value.humidity',        humidity)
-                    werte(objName + '.quality',         'Quality',          'number',  'level.co2',        quality)
-                    werte(objName + '.co2',             'CO2',              'number',  'level.co2',        co2)
-                    werte(objName + '.tempSupplyAir',   'Temp Supply Air',  'number',  'value.temperature',        tempSupplyAir)
-                    werte(objName + '.tempExhaustAir',  'Temp Exhaust Air', 'number',  'value.temperature',        tempExhaustAir)
-                    werte(objName + '.tempOutsideAir',  'Temp Outside Air', 'number',  'value.temperature',        tempOutsideAir)
-                    werte(objName + '.tempOutgoingAir', 'Temp Outgoing Air','number',  'value.temperature',        tempOutgoingAir)
-                    werte(objName + '.levelIn',         'Level In',         'number',  'value',        levelIn)
-                    werte(objName + '.levelOut',        'Level Out',        'number',  'value',        levelOut)
-                    werte(objName + '.sum',             'Sum',              'number',  'value',        sum)
-                    werte(objName + '.subType',         'Sub Type',         'number',  'value',        subType)
+                    werte(objName + '.level',           'Level',            'number',  'value',             true,   level)
+                    werte(objName + '.type',            'Type',             'number',  'value',             false,  type)
+                    werte(objName + '.mode',            'Mode',             'number',  'value',             false,  mode)
+                    werte(objName + '.bypassstate',     'Bypass State',     'number',  'value',             false,  bypassstate)
+                    werte(objName + '.maxLevel',        'Max Level',        'number',  'value.max',         false,  maxLevel)
+                    werte(objName + '.humidity',        'Humidity',         'number',  'value.humidity',    false,  humidity)
+                    werte(objName + '.quality',         'Quality',          'number',  'level.co2',         false,  quality)
+                    werte(objName + '.co2',             'CO2',              'number',  'level.co2',         false,  co2)
+                    werte(objName + '.tempSupplyAir',   'Temp Supply Air',  'number',  'value.temperature', false,  tempSupplyAir)
+                    werte(objName + '.tempExhaustAir',  'Temp Exhaust Air', 'number',  'value.temperature', false,  tempExhaustAir)
+                    werte(objName + '.tempOutsideAir',  'Temp Outside Air', 'number',  'value.temperature', false,  tempOutsideAir)
+                    werte(objName + '.tempOutgoingAir', 'Temp Outgoing Air','number',  'value.temperature', false,  tempOutgoingAir)
+                    werte(objName + '.levelIn',         'Level In',         'number',  'value',             false,  levelIn)
+                    werte(objName + '.levelOut',        'Level Out',        'number',  'value',             false,  levelOut)
+                    werte(objName + '.sum',             'Sum',              'number',  'value',             false,  sum)
+                    werte(objName + '.subType',         'Sub Type',         'number',  'value',             false,  subType)
 /*
                     console.log("interner name " + key);
                     console.log("Name " + ventName)
@@ -369,12 +369,12 @@ class Mygekko extends utils.Adapter {
                         common: { name: heatingName},
                         native: {}
                     });
-                    werte(objName + '.type',           'Type',            'number',  'value',        type)
-                    werte(objName + '.cooling',        'cooling',         'number',  'value',        cooling)
-                    werte(objName + '.flowTemp',       'flowTemp',        'number',  'value',        flowTemp)
-                    werte(objName + '.setpointTemp',   'setpointTemp',    'number',  'value',        setpointTemp)
-                    werte(objName + '.state',          'state',           'number',  'value',        state)
-                    werte(objName + '.sum',            'sum',             'number',  'value',        sum)
+                    werte(objName + '.type',           'Type',            'number',  'value',   false,       type)
+                    werte(objName + '.cooling',        'cooling',         'number',  'value',   false,    cooling)
+                    werte(objName + '.flowTemp',       'flowTemp',        'number',  'value',   false,     flowTemp)
+                    werte(objName + '.setpointTemp',   'setpointTemp',    'number',  'value',   false,     setpointTemp)
+                    werte(objName + '.state',          'state',           'number',  'value',   false,     state)
+                    werte(objName + '.sum',            'sum',             'number',  'value',   false,     sum)
         /*
                     console.log("interner name " + key);
                     console.log("Name " + heatingName)
@@ -428,13 +428,13 @@ class Mygekko extends utils.Adapter {
                         common: { name: heatingcircuitsName},
                         native: {}
                     });
-                    werte(objName + '.type',                'Type',             'number',  'value',        type)
-                    werte(objName + '.flowTemp',            'flowTemp',         'number',  'value',        flowTemp)
-                    werte(objName + '.pump',                'pump',             'number',  'value',        pump)
-                    werte(objName + '.cooling',             'cooling',          'number',  'value',        cooling)
-                    werte(objName + '.flowTempSetpoint',    'flowTempSetpoint', 'number',  'value',        flowTempSetpoint)
-                    werte(objName + '.valve',               'valve',            'number',  'value',        valve)
-                    werte(objName + '.sumstate',            'sumstate',         'number',  'value',        sumstate)
+                    werte(objName + '.type',                'Type',             'number',  'value',   false,    type)
+                    werte(objName + '.flowTemp',            'flowTemp',         'number',  'value',   false,     flowTemp)
+                    werte(objName + '.pump',                'pump',             'number',  'value',   false,     pump)
+                    werte(objName + '.cooling',             'cooling',          'number',  'value',   false,     cooling)
+                    werte(objName + '.flowTempSetpoint',    'flowTempSetpoint', 'number',  'value',   false,     flowTempSetpoint)
+                    werte(objName + '.valve',               'valve',            'number',  'value',   false,    valve)
+                    werte(objName + '.sumstate',            'sumstate',         'number',  'value',   false,     sumstate)
 /*
                     console.log("interner name " + key);
                     console.log("Name " + heatingcircuitsName)
@@ -489,14 +489,14 @@ class Mygekko extends utils.Adapter {
                         common: { name: hotwater_systemsName},
                         native: {}
                     });
-                    werte(objName + '.type',           'Type',             'number',  'value',        type)
-                    werte(objName + '.cooling',        'Cooling',          'number',  'value',        cooling)
-                    werte(objName + '.setpointTemp',   'Set Point Temp',   'number',  'value',        setpointTemp)
-                    werte(objName + '.topTemp',        'Top Temp',         'number',  'value',        topTemp)
-                    werte(objName + '.bottomTemp',     'Bottom Temp',      'number',  'value',        bottomTemp)
-                    werte(objName + '.collectorTemp',  'Collector Temp',   'number',  'value',        collectorTemp)
-                    werte(objName + '.state',          'State',            'number',  'value',        state)
-                    werte(objName + '.sum',            'Sum State',        'number',  'value',        sum)
+                    werte(objName + '.type',           'Type',             'number',  'value',  false,     type)
+                    werte(objName + '.cooling',        'Cooling',          'number',  'value',  false,      cooling)
+                    werte(objName + '.setpointTemp',   'Set Point Temp',   'number',  'value',  false,      setpointTemp)
+                    werte(objName + '.topTemp',        'Top Temp',         'number',  'value',  false,      topTemp)
+                    werte(objName + '.bottomTemp',     'Bottom Temp',      'number',  'value',  false,      bottomTemp)
+                    werte(objName + '.collectorTemp',  'Collector Temp',   'number',  'value',  false,      collectorTemp)
+                    werte(objName + '.state',          'State',            'number',  'value',  false,      state)
+                    werte(objName + '.sum',            'Sum State',        'number',  'value',  false,      sum)
                     
 /*
                     console.log("interner name " + key);
@@ -525,7 +525,6 @@ class Mygekko extends utils.Adapter {
             var suffix = "/api/v1/var/energycosts";
             var url = prefix + ip + suffix;
  
-            this.log.info('start')
             var { body } = retus(url + "?username="+m_user+"&password="+m_pass,{ method: "get", json: {}} )
             energycosts = body
             this.log.debug(data)
@@ -557,11 +556,11 @@ class Mygekko extends utils.Adapter {
                         common: { name: energyName},
                         native: {}
                     });
-                    werte(objName + '.actPower',           'Actual Power',          'number',  'value',        actPower)
-                    werte(objName + '.energyToday',        'Energy Today',          'number',  'value',        energyToday)
-                    werte(objName + '.energyMonth',        'Energy Month',          'number',  'value',        energyMonth)
-                    werte(objName + '.energySum',          'Energy Sum',            'number',  'value',        energySum)
-                    werte(objName + '.powerMax',           'Power Max',             'number',  'value.max',    powerMax)
+                    werte(objName + '.actPower',           'Actual Power',          'number',  'value',        false,   actPower)
+                    werte(objName + '.energyToday',        'Energy Today',          'number',  'value',        false,   energyToday)
+                    werte(objName + '.energyMonth',        'Energy Month',          'number',  'value',        false,   energyMonth)
+                    werte(objName + '.energySum',          'Energy Sum',            'number',  'value',        false, energySum)
+                    werte(objName + '.powerMax',           'Power Max',             'number',  'value.max',    false,  powerMax)
                     /*
                     this.log.info("interner name " + key);
                     this.log.info("Name " + energyName)
@@ -592,8 +591,7 @@ class Mygekko extends utils.Adapter {
             heatingcircuit();
             hotwater_system();
             energycost();
-            this.log.info('done')
-        }, 1000);
+        }, this.config.mygekkoRefresh);
         
         
        
@@ -658,7 +656,7 @@ class Mygekko extends utils.Adapter {
      * Is called if a subscribed object changes
      * @param {string} id
      * @param {ioBroker.Object | null | undefined} obj
-     
+     */
     onObjectChange(id, obj) {
         if (obj) {
             // The object was changed
@@ -673,17 +671,59 @@ class Mygekko extends utils.Adapter {
      * Is called if a subscribed state changes
      * @param {string} id
      * @param {ioBroker.State | null | undefined} state
-     *
+     */
     onStateChange(id, state) {
-        if (state) {
+        if (state && state.from != `system.adapter.${this.namespace}` && state.ack == true) {             
             // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            const ip = this.config.mygekkoIP;
+            const m_user = this.config.mygekkoUser;
+            const m_pass = this.config.mygekkoPW;
+            var prefix = "http://";
+            var changed_id = new Object
+            var url
+            changed_id = id.split('.');
+
+            if(changed_id[2] == "blind") {
+                // changed_id[3] = item 
+                // changed_id[4] = position
+                // ${state.val} = value
+                if(changed_id[4] == "angle") {
+                    url = "blinds/"+changed_id[3]+"/scmd/set?value=S"+ state.val; 
+                }
+                if(changed_id[4] == "position") {
+                    url = "blinds/"+changed_id[3]+"/scmd/set?value=P"+ state.val; 
+                }
+            }
+            if(changed_id[2] == "light") {
+                if(changed_id[4] == "state") {
+                    url = "lights/"+changed_id[3]+"/scmd/set?value="+ state.val; 
+                }
+            }
+            if(changed_id[2] == "roomTemp") {
+                if(changed_id[4] == "tempAdjust") {
+                    url = "roomtemps/"+changed_id[3]+"/scmd/set?value=K"+ state.val; 
+                }
+            }
+            if(changed_id[2] == "vent") {
+                if(changed_id[4] == "level") {
+                    url = "vents/"+changed_id[3]+"/scmd/set?value="+ state.val; 
+                }
+            }
+            
+            
+            url = prefix + ip + "/api/v1/var/" + url + "&username="+m_user+"&password="+m_pass
+            this.log.debug(url)
+            
+            var { body } = retus(url,{ method: "get"})
+            this.log.debug(body)
+                    
+            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
         } else {
             // The state was deleted
-            this.log.info(`state ${id} deleted`);
+            //this.log.info(`state ${id} deleted`);
         }
     }
-*/
+
     // /**
     //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
     //  * Using this method requires "common.message" property to be set to true in io-package.json

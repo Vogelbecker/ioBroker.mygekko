@@ -9,7 +9,8 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const retus = require("retus");
+const request = require('request'); 
+const retus = require('retus');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");

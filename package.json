@@ -22,7 +22,7 @@
     "@iobroker/adapter-core": "^2.2.1",
     "request": "^2.83.0",
     "xmlhttprequest": "^1.8.0",
-    "retus": "^1.1.1"
+    "retus": "1.1.1"
   },
   "devDependencies": {
     "@iobroker/testing": "^2.1.0",

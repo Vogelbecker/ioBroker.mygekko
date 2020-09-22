@@ -85,7 +85,7 @@
     "dependencies": [
       {
         "js-controller": ">=1.4.2",
-	"retus": "^1.1.0"
+	"retus": ">=1.1.2"
       }
     ],
     "installedFrom": "https://github.com/Vogelbecker/ioBroker.mygekko/tarball/e7f570233983ac2174d8fbfe16770a214f09db0c"

@@ -14,7 +14,7 @@
 
 Erste Version vom ioBroker Adapter fuer myGekko
 
-In der Adapterkonfiguration muessen IP Adresse, Benutername und Passwort, sowie die Refresh-Rate engebeben werden, wie oft ihr die Daten aktualisiert haben moechtet. (Angabe in ms. Also z.B. 1000 ein das Feld eintragen fuer 10 Sekunden)
+In der Adapterkonfiguration muessen IP Adresse, Benutername und Passwort, sowie die Refresh-Rate engebeben werden, wie oft ihr die Daten aktualisiert haben moechtet. (Angabe in ms. Also z.B. 10000 ein das Feld eintragen fuer 10 Sekunden)
 
 ## License
 MIT License
